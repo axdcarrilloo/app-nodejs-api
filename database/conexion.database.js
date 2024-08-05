@@ -1,15 +1,6 @@
 
 const mongoose = require('mongoose');
 
-/*async function disconexionDB() {
-  try {
-    await mongoose.disconnect();
-    console.log('conexion.database.js - disconexionDB() -> MongoDB desconectado');
-  } catch (err) {
-      console.error(err);
-  }
-}*/
-
 async function conexionDB() {
   return await mongoose.connect('mongodb://localhost:27017/logins')
   .then(() => {
