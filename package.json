@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "debug": "node --inspect index.js",
     "dev": "nodemon index.js",
     "start": "node index.js",
     "lint": "eslint"
