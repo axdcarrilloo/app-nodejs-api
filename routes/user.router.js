@@ -16,13 +16,21 @@ router.post('/login',
   }
 );
 
-router.get('/getAll', async(req, res) => {
-  res.json(await userSvc.getAll());
+router.get('/getAll', async(req, res, next) => {
+  try {
+    res.json(await userSvc.getAll());
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post('/register', validatorHandler(userSchema, 'body'),
   async(req, res, next) => {
-    res.status(201).json(await userSvc.register(req.body));
+    try {
+      res.status(201).json(await userSvc.register(req.body));
+    } catch (error) {
+      next(error);
+    }
   }
 );
 

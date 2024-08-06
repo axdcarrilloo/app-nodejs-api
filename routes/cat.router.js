@@ -24,8 +24,12 @@ router.get('/breeds/:id',
   }
 );
 
-router.get('/breeds', async(req, res) => {
-  res.json(await catSvc.getAll());
+router.get('/breeds', async(req, res, next) => {
+  try {
+    res.json(await catSvc.getAll());
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

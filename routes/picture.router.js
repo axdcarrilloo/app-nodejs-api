@@ -5,9 +5,13 @@ const PictureService = require('../services/picture.service');
 const router = express.Router();
 const pictureSvc = new PictureService();
 
-router.get('/imagesbybreed/:id', async(req, res) => {
+router.get('/imagesbybreed/:id', async(req, res, next) => {
   const { id } = req.params;
-  res.json(await pictureSvc.getByIdBreed(id));
+  try {
+    res.json(await pictureSvc.getByIdBreed(id));
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
