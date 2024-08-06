@@ -11,7 +11,13 @@ class CatService {
     const response = await axios.get(this.catAPI + '/breeds');
     const responseFiltered = response.data.map(({ id, name, temperament, origin }) => ({ id, name, temperament, origin }));
     const { temperament, origin } = properties;
-    return responseFiltered.find(cats => temperament === cats.temperament || origin === cats.origin);
+    let breedMain = [];
+    responseFiltered.find(cat => {
+      if(temperament === cat.temperament || origin === cat.origin) {
+        breedMain.push(cat);
+      }
+    });
+    return breedMain;
   }
 
   buildRequestQuerys(properties) {

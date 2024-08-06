@@ -6,7 +6,7 @@ const userSchema = require('../schemas/user.schema');
 const router = express.Router();
 const userSvc = new UserService();
 
-router.get('/login',
+router.post('/login',
   async(req, res, next) => {
     try {
       res.json(await userSvc.getByUserNameAndPassword(req.body));
