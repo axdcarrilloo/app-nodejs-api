@@ -1,19 +1,16 @@
+const PictureEndpoint = require('../externals/picture.endpoint');
 
-const axios = require('axios');
+const pictureEnp = new PictureEndpoint();
 
 class PictureService {
-  constructor() {
-    this.catAPI = 'https://api.thecatapi.com/v1';
-    this.key = '&api_key=live_JBT0Ah0Nt12iyl2IpjQVLDWjcLk0GQwf4zI9wBMfmfejKmcC31mOJp4yJz5TsOUP';
-  }
+  constructor() {}
 
   async getByIdBreed(idBreed) {
     try {
-      const response = await axios.get(this.catAPI + '/images/search?limit=10&breed_ids=' + idBreed + this.key);
-      const responseFiltered = response.data.map(({ id, url, width, height }) => ({ id, url, width, height }));
+      const responseFiltered = await pictureEnp.findByIdBreed(idBreed);
       return responseFiltered;
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   }
 

@@ -1,23 +1,28 @@
-const axios = require('axios');
+
 const lodash = require('lodash');
 const boom = require('@hapi/boom');
+const CatEntpoint = require('../externals/cat.endpoint');
+
+const catEnp = new CatEntpoint();
 
 class CatService {
-  constructor(){
-    this.catAPI = 'https://api.thecatapi.com/v1';
-  }
+  constructor(){ }
 
   async searchOptional(properties) {
-    const response = await axios.get(this.catAPI + '/breeds');
-    const responseFiltered = response.data.map(({ id, name, temperament, origin }) => ({ id, name, temperament, origin }));
-    const { temperament, origin } = properties;
-    let breedMain = [];
-    responseFiltered.find(cat => {
-      if(temperament === cat.temperament || origin === cat.origin) {
-        breedMain.push(cat);
-      }
-    });
+    try {
+      const response = await this.getAll();
+      let responseFiltered = response.map(({ id, name, temperament, origin }) => ({ id, name, temperament, origin }));
+      const { temperament, origin } = properties;
+      let breedMain = [];
+      responseFiltered.find(cat => {
+        if(temperament === cat.temperament || origin === cat.origin) {
+          breedMain.push(cat);
+        }
+      });
     return breedMain;
+    } catch (error) {
+      throw error;
+    }
   }
 
   buildRequestQuerys(properties) {
@@ -40,36 +45,36 @@ class CatService {
   }
 
   async getSearch(properties) {
-    const response = await axios.get(this.catAPI + '/breeds/search?' + this.buildRequestQuerys(properties));
-    let responseFiltered = response.data.map(({ id, name, temperament, origin }) => ({ id, name, temperament, origin }));
-    if(lodash.isEmpty(responseFiltered)) {
-      responseFiltered = await this.searchOptional(properties);
+    try {
+      const response = await catEnp.search(this.buildRequestQuerys(properties));
+      let responseFiltered = response.data.map(({ id, name, temperament, origin }) => ({ id, name, temperament, origin }));
+      if(lodash.isEmpty(responseFiltered)) {
+        responseFiltered = await this.searchOptional(properties);
+      }
+      if(lodash.isEmpty(responseFiltered)) {
+        throw boom.notFound('Raza no encontrada');
+      }
+      return responseFiltered;
+    } catch (error) {
+      throw error;
     }
-    if(lodash.isEmpty(responseFiltered)) {
-      throw boom.notFound('Gato no encontrado');
-    }
-    return responseFiltered;
   }
 
   async getById(idCat) {
     try {
-      const response = await axios.get(this.catAPI + '/breeds/' + idCat);
-      const { id, name, temperament, origin } = response.data;
-      const responseFiltered = { id, name, temperament, origin }
+      const responseFiltered = await catEnp.findById(idCat);
       return responseFiltered;
     } catch (error) {
-      console.log(error.message);
-      throw boom.notFound('Gato no encontrado');
+      throw error;
     }
   }
 
   async getAll() {
     try {
-      const response = await axios.get(this.catAPI + '/breeds');
-      const responseFiltered = response.data.map(({ id, name, temperament, origin }) => ({ id, name, temperament, origin }));
+      const responseFiltered = await catEnp.findAll();
       return responseFiltered;
     } catch (error) {
-      console.error(error.message);
+      throw error;
     }
   }
 
