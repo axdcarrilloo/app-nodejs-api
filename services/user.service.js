@@ -1,44 +1,41 @@
 
-const User = require('../models/user.model');
+const UserDatabase = require('../database/user.database');
 const boom = require('@hapi/boom');
+
+const userDB = new UserDatabase();
 
 class UserService {
   constructor() {}
 
   async getByUserNameAndPassword(login) {
-    const result = await User.find().then(users => {
-      return users.find(user => {
-        if(user.userName === login.userName && user.password === login.password) {
-          return user;
-        }
-      });
-    });
-    if(!result) {
-      throw boom.notFound('Usuario no encontrado');
-    } else {
-      return result;
+    try {
+      const result = await userDB.findByLogin(login);
+      if(!result) {
+        throw boom.notFound('Usuario no encontrado');
+      } else {
+        return result;
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
   async getAll() {
-    const result = User.find().then();
-    return result;
+    try {
+      const result = await userDB.findAll();
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async register(user) {
-    const newUser = new User({
-      numberCC: user.numberCC,
-      name: user.name,
-      lastName: user.lastName,
-      email: user.email,
-      userName: user.userName,
-      password: user.password
-    });
-
-    const id = newUser.save().then(user => {
-      return user._id
-    });
-    return id;
+    try {
+      const id = await userDB.create(user);
+      return id;
+    } catch (error) {
+      throw error;
+    }
   }
 
 }
