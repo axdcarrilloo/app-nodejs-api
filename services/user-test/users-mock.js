@@ -1,4 +1,13 @@
 
+const getNewUser = () => ({
+  numberCC: '1287965409',
+  name: 'Jairo David',
+  lastName: 'Malindo',
+  email: 'jmalindo@yahoo.es',
+  userName: 'jmalindo',
+  password: 'jm2b3c',
+});
+
 const getUserMock = () => ({
   _id: '66ba9e195040b32929471074',
   numberCC: '1287965409',
@@ -6,7 +15,7 @@ const getUserMock = () => ({
   lastName: 'Malindo',
   email: 'jmalindo@yahoo.es',
   userName: 'jmalindo',
-  password: '1a2b3c',
+  password: 'jm2b3c',
   __v: 0
 });
 
@@ -33,4 +42,4 @@ const getAllUsersMock = () => ([
   }
 ]);
 
-module.exports = { getAllUsersMock, getUserMock };
+module.exports = { getAllUsersMock, getUserMock, getNewUser };
